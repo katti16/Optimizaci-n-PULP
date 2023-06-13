@@ -13,9 +13,12 @@ from google.colab import files
 ```
 
 # 2. Cargar los datos.
+```shell
 uploaded = files.upload()
+```
 
 # 3. Definir las variables
+````shell
 viviendas = data.comunidad.unique()
 max_capacities = {comunidad: data.loc[data.comunidad == comunidad, 'capacidad'].values[0] for comunidad in viviendas}
 viviendas_nuevas = {comunidad: pulp.LpVariable(name=comunidad, cat=pulp.LpInteger, lowBound=0, upBound=max_capacities[comunidad] ) for comunidad in viviendas}
@@ -24,17 +27,20 @@ coste = data.set_index('comunidad').loc[viviendas,'coste construcción' ].values
 poblacion = data.set_index('comunidad').loc[viviendas,'población' ].values
 intercept = data.set_index('comunidad').loc[viviendas, 'intercept'].values
 parque = data.set_index('comunidad').loc[viviendas, 'parque viviendas'].values
+````
 
 # Definir funciones
+````shell
 total_viviendas_nuevas = pulp.LpAffineExpression()
 for i, comunidad in enumerate(viviendas):
     total_viviendas_nuevas += intercept[i] + coeficiente[i] * (viviendas_nuevas[comunidad])
 coste_construccion = pulp.LpAffineExpression()
 for i, comunidad in enumerate(viviendas):
     coste_construccion +=  coste[i] * viviendas_nuevas[comunidad]
-
+````
 
 # Definir restricciones
+````shell
 constraint1 = pulp.LpConstraint(
     e=pulp.lpSum(list(viviendas_nuevas.values())),
     sense=pulp.LpConstraintEQ,
@@ -67,8 +73,10 @@ constraint5 = {comunidad: pulp.LpConstraint(
     name=f"capacity_{comunidad}",
     rhs=max_capacities[comunidad]
 ) for comunidad in viviendas}
+````
 
 # Optimizar el problema
+````shell
 problem = pulp.LpProblem("distribución", pulp.LpMinimize)
 problem += coste_construccion
 
@@ -89,3 +97,4 @@ for v in problem.variables():
     
 print(pulp.value(problem.objective))
 
+````
