@@ -4,12 +4,13 @@ En este repositorio se puede encontrar una guía de la utilización del solver P
 # 1. Iniciar el programa.
 El primer paso es abrir un cuaderno en Python. Para ello, se puede utilizar "Google Collaboratory".
 Antes de cargar los datos, es necesario instalar los paquetes que se van a utilizar para la simulación:
-
+'''shell
 import pandas as pd
 import numpy as np
 !pip install pulp
 import pulp
 from google.colab import files
+'''
 
 # 2. Cargar los datos.
 uploaded = files.upload()
